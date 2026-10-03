@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% block pagetitle %}{{ title }} - Diagnostic Report{% endblock pagetitle %}
+
+{% block body %}
+<div class="container py-5">
+  <!-- Report Header Card -->
+  <div class="result-header-card">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="badge bg-light text-dark font-weight-bold">{{ crop }}</span>
+          {% if status == 'healthy' %}
+            <span class="status-badge healthy">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Healthy Specimen
+            </span>
+          {% elif status == 'no_leaf' %}
+            <span class="status-badge no_leaf">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+              Non-Leaf Image Detected
+            </span>
+          {% else %}
+            <span class="status-badge diseased">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Infection Detected
+            </span>
+          {% endif %}
+        </div>
+        <h1 class="display-6 font-weight-bold mb-1" style="color: #064e3b;">{{ title }}</h1>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex gap-2 no-print">
+        <button onclick="window.print()" class="btn btn-sm btn-outline-secondary px-3 py-2 rounded-pill font-weight-bold d-inline-flex align-items-center gap-1">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print Report
+        </button>
+        <a href="/index" class="btn btn-sm btn-success px-3 py-2 rounded-pill font-weight-bold d-inline-flex align-items-center gap-1" style="background: var(--primary-600);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Scan Another
+        </a>
+      </div>
+    </div>
+
+    <!-- Confidence Score Bar -->
+    <div class="confidence-meter">
+      <div class="small font-weight-bold text-muted" style="min-width: 140px;">
+        Model Confidence: <span class="text-dark">{{ confidence }}%</span>
+      </div>
+      <div class="confidence-bar-bg">
+        <div class="confidence-bar-fill" style="width: {{ confidence }}%;"></div>
+      </div>
+      <span class="badge {% if confidence > 85 %}bg-success{% elif confidence > 60 %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+        {% if confidence > 85 %}High Confidence{% elif confidence > 60 %}Moderate Confidence{% else %}Low Confidence{% endif %}
+      </span>
+    </div>
+  </div>
+
+  <!-- Side-by-side Leaf Comparison -->
+  <div class="row g-4 mb-4">
+    <!-- User Uploaded Image -->
+    <div class="col-md-6">
+      <div class="comparison-box">
+        <div class="comparison-label bg-light">
+          <span>Submitted Image</span>
+          <span class="badge bg-secondary">User Specimen</span>
+        </div>
+        <img src="{{ user_image }}" alt="User leaf sample" onerror="this.src='/static/test_samples/Apple_scab.JPG'">
+      </div>
+    </div>
+
+    <!-- Reference Pathology Image -->
+    <div class="col-md-6">
+      <div class="comparison-box">
+        <div class="comparison-label bg-light">
+          <span>Official Pathology Reference</span>
+          <span class="badge bg-success">PlantVillage Dataset</span>
+        </div>
+        {% if image_url and image_url != 'nan' %}
+        <img src="{{ image_url }}" alt="Pathology reference" onerror="this.src='/static/test_samples/Apple_scab.JPG'">
+        {% else %}
+        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 260px;">
+          <span class="text-muted small">No reference image available for this category.</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Clinical Description & Steps -->
+    <div class="col-lg-8">
+      <!-- Description Section -->
+      <div class="studio-card mb-4">
+        <h5 class="mb-3 font-weight-bold text-dark d-flex align-items-center gap-2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" color="var(--primary-600)">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          {% if status == 'healthy' %}
+            Crop Profile & Optimal Growing Conditions
+          {% elif status == 'no_leaf' %}
+            Detection Notice
+          {% else %}
+            Pathology Overview & Symptoms
+          {% endif %}
+        </h5>
+        <p class="text-muted mb-0" style="white-space: pre-line; line-height: 1.7;">
+          {{ desc }}
+        </p>
+      </div>
+
+      <!-- Actionable Treatment Steps -->
+      <div class="studio-card">
+        <h5 class="mb-3 font-weight-bold text-dark d-flex align-items-center gap-2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" color="var(--primary-600)">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          {% if status == 'healthy' %}
+            Best Practices to Maintain Foliar Health
+          {% elif status == 'no_leaf' %}
+            Next Steps
+          {% else %}
+            Actionable Treatment & Prevention Protocol
+          {% endif %}
+        </h5>
+
+        {% if prevent_steps and prevent_steps|length > 0 %}
+          {% for step in prevent_steps %}
+          <div class="step-item">
+            <div class="step-number">{{ loop.index }}</div>
+            <div>{{ step }}</div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-muted">No specific preventive steps listed.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right Column: Top 3 Candidates & Product Recommendation -->
+    <div class="col-lg-4">
+      <!-- Top 3 Probability Breakdown -->
+      <div class="studio-card mb-4">
+        <h6 class="mb-3 font-weight-bold text-dark">Neural Softmax Breakdown</h6>
+        {% for cand in top_3 %}
+        <div class="prediction-pill">
+          <span class="text-truncate me-2" style="max-width: 190px;" title="{{ cand.name }}">
+            {{ cand.name }}
+          </span>
+          <span class="font-weight-bold {% if loop.first %}text-success{% else %}text-muted{% endif %}">
+            {{ cand.confidence }}%
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Recommended Supplement or Fertilizer -->
+      {% if sname and sname != 'nan' %}
+      <div class="studio-card text-center">
+        <span class="badge mb-2 {% if status == 'healthy' %}bg-success{% else %}bg-danger{% endif %} text-white">
+          {% if status == 'healthy' %}Recommended Nutrient Booster{% else %}Prescribed Fungicide / Remedy{% endif %}
+        </span>
+        <h6 class="font-weight-bold text-dark mb-3">{{ sname }}</h6>
+
+        {% if simage and simage != 'nan' and simage.startswith('http') %}
+        <div class="mb-3" style="height: 180px; display: flex; align-items: center; justify-content: center;">
+          <img src="{{ simage }}" alt="{{ sname }}" style="max-height: 170px; max-width: 100%; object-fit: contain;" onerror="this.style.display='none'">
+        </div>
+        {% endif %}
+
+        {% if buy_link and buy_link != 'nan' and buy_link.startswith('http') %}
+        <a href="{{ buy_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-success w-100 rounded-pill font-weight-bold">
+          View & Purchase Product &rarr;
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock body %}

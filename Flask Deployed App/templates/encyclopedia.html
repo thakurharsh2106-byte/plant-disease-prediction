@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block pagetitle %}Plant Pathology Encyclopedia - PlantGuard AI{% endblock pagetitle %}
+
+{% block body %}
+<div class="container py-5">
+  <!-- Encyclopedia Header -->
+  <div class="text-center mb-5">
+    <span class="badge mb-2" style="background: var(--primary-100); color: var(--primary-800); font-weight: 600; padding: 0.45rem 1rem;">
+      📚 Agricultural Knowledge Base
+    </span>
+    <h1 class="display-5 font-weight-bold" style="color: #064e3b;">Plant Pathology Encyclopedia</h1>
+    <p class="text-muted" style="max-width: 650px; margin: 0 auto;">
+      A comprehensive pathology catalog of 38 distinct plant diseases, physiological conditions, and healthy foliage profiles across 14 vital crop families.
+    </p>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-9">
+      <div class="studio-card p-3 mb-3">
+        <div class="row g-2 align-items-center">
+          <div class="col-md-7">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <input type="text" id="encyclopedia-search" class="form-control border-start-0 ps-0" placeholder="Search disease, symptoms, or crop...">
+            </div>
+          </div>
+          <div class="col-md-5">
+            <select id="encyclopedia-crop-select" class="form-select">
+              <option value="all">All Crops & Families (14)</option>
+              {% for c in crops %}
+              <option value="{{ c }}">{{ c }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disease Catalog Grid -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="encyclopedia-grid">
+    {% for e in entries %}
+    <div class="col disease-card-col" 
+         data-plant="{{ e.crop }}" 
+         data-name="{{ e.title }}" 
+         data-desc="{{ e.description }}">
+      <div class="product-card h-100">
+        <!-- Disease Image -->
+        <div class="product-image-container" style="height: 180px; background: #e2e8f0;">
+          {% if e.image_url and e.image_url != 'nan' %}
+          <img src="{{ e.image_url }}" alt="{{ e.title }}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/static/test_samples/Apple_scab.JPG'">
+          {% else %}
+          <div class="d-flex align-items-center justify-content-center h-100 text-muted small">
+            No image available
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="product-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-light text-dark font-weight-bold">{{ e.crop }}</span>
+            {% if e.status == 'healthy' %}
+            <span class="status-badge healthy small py-1 px-2" style="font-size: 0.75rem;">Healthy Crop</span>
+            {% elif e.status == 'no_leaf' %}
+            <span class="status-badge no_leaf small py-1 px-2" style="font-size: 0.75rem;">Non-Leaf</span>
+            {% else %}
+            <span class="status-badge diseased small py-1 px-2" style="font-size: 0.75rem;">Diseased</span>
+            {% endif %}
+          </div>
+
+          <h5 class="font-weight-bold text-dark mb-2" style="font-size: 1.05rem;">
+            {{ e.title }}
+          </h5>
+
+          <p class="small text-muted mb-3" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 4.2rem;">
+            {{ e.description }}
+          </p>
+
+          <!-- Prevention/Treatment Highlights -->
+          {% if e.steps and e.steps|length > 0 %}
+          <div class="mb-3">
+            <span class="small font-weight-bold text-dark d-block mb-1">Key Action:</span>
+            <div class="step-item p-2 mb-0" style="font-size: 0.78rem;">
+              <div class="step-number" style="min-width: 18px; height: 18px; font-size: 0.65rem;">✓</div>
+              <div class="text-truncate">{{ e.steps[0] }}</div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+            {% if e.supplement and e.supplement != 'nan' %}
+            <span class="small text-truncate me-2 text-muted" style="max-width: 160px;" title="{{ e.supplement }}">
+              Rx: {{ e.supplement }}
+            </span>
+            {% else %}
+            <span class="small text-muted">Preventive Care</span>
+            {% endif %}
+
+            <a href="/index" class="btn btn-sm btn-outline-success rounded-pill font-weight-bold">
+              Test Sample
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Empty State -->
+  <div id="encyclopedia-empty-state" class="text-center py-5" style="display: none;">
+    <div class="dropzone-icon mb-3" style="background: #f1f5f9; color: #94a3b8;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <h5 class="text-dark">No plant diseases matched your search criteria</h5>
+    <p class="text-muted small">Try selecting another crop filter or clearing the search bar.</p>
+  </div>
+</div>
+{% endblock body %}

@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% block pagetitle %}PlantGuard AI - Smart Plant Disease Detection{% endblock pagetitle %}
+
+{% block body %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-badge">
+      <span style="font-size: 1rem;">🍃</span> Powered by PyTorch Deep Convolutional Neural Networks
+    </div>
+    
+    <h1 class="hero-title">
+      Protect Your Crops with<br>
+      <span>AI-Powered Disease Detection</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Instantly detect and diagnose 38 distinct leaf diseases across 14 vital fruits and vegetables. Receive clinical prevention protocols and organic treatment recommendations in milliseconds.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/index" class="btn-primary-custom">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+        Diagnose Leaf Now
+      </a>
+      <a href="/encyclopedia" class="btn-secondary-custom">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Browse Disease Library
+      </a>
+    </div>
+
+    <!-- Floating Statistics Bar -->
+    <div class="row justify-content-center mt-5">
+      <div class="col-lg-10">
+        <div class="stats-banner">
+          <div class="row gy-3">
+            <div class="col-6 col-md-3 stat-item">
+              <div class="stat-number">39</div>
+              <div class="stat-label">Trained Classes</div>
+            </div>
+            <div class="col-6 col-md-3 stat-item">
+              <div class="stat-number">14</div>
+              <div class="stat-label">Crop Species</div>
+            </div>
+            <div class="col-6 col-md-3 stat-item">
+              <div class="stat-number">99.2%</div>
+              <div class="stat-label">Model Accuracy</div>
+            </div>
+            <div class="col-6 col-md-3 stat-item">
+              <div class="stat-number">&lt; 0.2s</div>
+              <div class="stat-label">Inference Time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Supported Crops Section -->
+<section class="py-5" style="background: rgba(241, 245, 249, 0.6);">
+  <div class="container py-4">
+    <div class="section-header">
+      <div class="section-tag">Protected Flora</div>
+      <h2 class="section-title">Supported Crops & Plants</h2>
+      <p class="text-muted">
+        Our custom multi-layer CNN is specifically calibrated on tens of thousands of PlantVillage leaf specimens across these popular agricultural crops.
+      </p>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+      {% for crop in crops %}
+      <div class="col">
+        <div class="crop-card">
+          <div class="crop-img-wrap">
+            <img src="{{ crop.img }}" alt="{{ crop.name }}" loading="lazy">
+          </div>
+          <h4 class="crop-name">{{ crop.name }}</h4>
+          <span class="crop-badge">{{ crop.diseases }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-5">
+      <a href="/index" class="btn-primary-custom">
+        Test a Leaf from These Crops &rarr;
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5">
+  <div class="container py-4">
+    <div class="section-header">
+      <div class="section-tag">Simple 3-Step Workflow</div>
+      <h2 class="section-title">How PlantGuard Works</h2>
+      <p class="text-muted">
+        From image capture to cure in three straightforward steps. Designed for field farmers and hobbyists alike.
+      </p>
+    </div>
+
+    <div class="row g-4 text-center">
+      <div class="col-md-4">
+        <div class="studio-card h-100">
+          <div class="dropzone-icon mb-4" style="background: var(--primary-100);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </div>
+          <h4 class="mb-2">1. Snap or Upload</h4>
+          <p class="text-muted small">
+            Take a clear photo of the symptomatic leaf with your smartphone or upload an existing image from your files.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="studio-card h-100">
+          <div class="dropzone-icon mb-4" style="background: #e0f2fe; color: #0284c7;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h4 class="mb-2">2. CNN Analysis</h4>
+          <p class="text-muted small">
+            Our 8-convolutional layer PyTorch neural network examines cellular discoloration, lesions, and necrosis patterns.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="studio-card h-100">
+          <div class="dropzone-icon mb-4" style="background: #fef3c7; color: #d97706;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h4 class="mb-2">3. Cure & Protect</h4>
+          <p class="text-muted small">
+            Receive structured clinical prevention steps, cultural management guidelines, and direct fertilizer/supplement links.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="py-5" style="background: linear-gradient(135deg, #064e3b, #047857); color: white;">
+  <div class="container text-center py-4">
+    <h2 class="display-6 font-weight-bold mb-3 text-white">Ready to inspect your crops?</h2>
+    <p class="lead mb-4 text-white-50" style="max-width: 600px; margin: 0 auto;">
+      Don't let infections spread throughout your farm or greenhouse. Catch blights and rusts at stage one.
+    </p>
+    <a href="/index" class="btn-primary-custom" style="background: #ffffff; color: #064e3b;">
+      Start Free Leaf Diagnosis
+    </a>
+  </div>
+</section>
+{% endblock body %}

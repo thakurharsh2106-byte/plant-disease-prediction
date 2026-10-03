@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch Deep Learning Model Weights (>100MB exceeds GitHub file size limit)
+*.pt
+*.pth
+*.bin
+*.h5
+*.onnx
+
+# Uploads & Temp files
+Flask Deployed App/static/uploads/*
+!Flask Deployed App/static/uploads/.gitkeep
+
+# Environments & OS metadata
+.DS_Store
+.env
+venv/
+env/
+.venv/

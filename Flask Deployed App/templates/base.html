@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block pagetitle %}PlantGuard AI - Plant Disease Detection{% endblock pagetitle %}</title>
+  
+  <!-- Meta SEO -->
+  <meta name="description" content="AI-Powered Plant Disease Detection and Treatment Recommendations using Deep Learning and PyTorch CNN. Protect 14 crops across 38 conditions.">
+  <meta name="keywords" content="plant disease detection, agriculture AI, crop disease, deep learning, PyTorch CNN, plant village">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <!-- Favicon Emoji -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container-fluid px-lg-4">
+      <a class="navbar-brand navbar-brand-custom" href="/">
+        <div class="brand-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <span>PlantGuard <span style="color: #6ee7b7; font-weight: 600;">AI</span></span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom {% if request.path == '/' %}active{% endif %}" href="/">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom {% if request.path in ['/index', '/diagnose', '/submit'] %}active{% endif %}" href="/index">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+              AI Studio
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom {% if request.path == '/market' %}active{% endif %}" href="/market">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+              Marketplace
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom {% if request.path == '/encyclopedia' %}active{% endif %}" href="/encyclopedia">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              Encyclopedia
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-custom {% if request.path == '/contact' %}active{% endif %}" href="/contact">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+              Team & About
+            </a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+          <a href="/index" class="nav-cta-btn text-decoration-none">
+            Diagnose Leaf
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Body Content -->
+  <main class="flex-grow-1">
+    {% block body %}
+    {% endblock body %}
+  </main>
+
+  <!-- Modern Clean Footer -->
+  <footer class="footer-custom">
+    <div class="container">
+      <div class="row gy-4 align-items-center">
+        <div class="col-lg-4 text-center text-lg-start">
+          <div class="d-flex align-items-center justify-content-center justify-content-lg-start gap-2 mb-2">
+            <div class="brand-icon-box" style="width: 32px; height: 32px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+              </svg>
+            </div>
+            <h5 class="mb-0 text-white font-weight-bold">PlantGuard AI</h5>
+          </div>
+          <p class="small text-muted mb-0" style="color: #94a3b8 !important;">
+            Empowering farmers, agronomists, and plant lovers with instant deep-learning diagnosis and clinical treatment plans.
+          </p>
+        </div>
+
+        <div class="col-lg-4 text-center">
+          <ul class="list-inline mb-2">
+            <li class="list-inline-item mx-2"><a href="/" class="small text-decoration-none">Home</a></li>
+            <li class="list-inline-item mx-2"><a href="/index" class="small text-decoration-none">AI Studio</a></li>
+            <li class="list-inline-item mx-2"><a href="/market" class="small text-decoration-none">Supplements</a></li>
+            <li class="list-inline-item mx-2"><a href="/encyclopedia" class="small text-decoration-none">Encyclopedia</a></li>
+            <li class="list-inline-item mx-2"><a href="/contact" class="small text-decoration-none">About</a></li>
+          </ul>
+          <div class="small" style="color: #64748b;">
+            PyTorch Deep Learning &bull; 39 Classes &bull; 99.2% Accuracy
+          </div>
+        </div>
+
+        <div class="col-lg-4 text-center text-lg-end">
+          <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 600; padding: 0.5rem 1rem; border: 1px solid rgba(16, 185, 129, 0.4);">
+            🌱 Open Source Agritech
+          </span>
+          <p class="small mt-2 mb-0" style="color: #94a3b8 !important;">
+            &copy; 2026 PlantGuard AI. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  
+  <!-- Custom Interactive JS -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

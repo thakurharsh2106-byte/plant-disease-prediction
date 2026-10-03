@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block pagetitle %}Agricultural Supplements & Fertilizers - PlantGuard AI{% endblock pagetitle %}
+
+{% block body %}
+<div class="container py-5">
+  <!-- Marketplace Header -->
+  <div class="text-center mb-5">
+    <span class="badge mb-2" style="background: var(--primary-100); color: var(--primary-800); font-weight: 600; padding: 0.45rem 1rem;">
+      🛒 Field-Tested Agricultural Inputs
+    </span>
+    <h1 class="display-5 font-weight-bold" style="color: #064e3b;">Supplements & Remedy Market</h1>
+    <p class="text-muted" style="max-width: 600px; margin: 0 auto;">
+      Targeted chemical and organic remedies, systemic fungicides, micronutrients, and crop yield boosters matched directly to PlantVillage diagnosed conditions.
+    </p>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-lg-8">
+      <div class="studio-card p-3 mb-3">
+        <div class="row g-2 align-items-center">
+          <div class="col-md-7">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-muted"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <input type="text" id="market-search" class="form-control border-start-0 ps-0" placeholder="Search by crop, disease, or product name...">
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="d-flex gap-1 justify-content-md-end">
+              <button class="btn btn-sm btn-outline-success market-filter-btn active rounded-pill px-3" data-filter="all">All</button>
+              <button class="btn btn-sm btn-outline-danger market-filter-btn rounded-pill px-3" data-filter="diseased">Fungicides</button>
+              <button class="btn btn-sm btn-outline-primary market-filter-btn rounded-pill px-3" data-filter="healthy">Nutrients</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="market-grid">
+    {% for p in products %}
+    <div class="col market-product-col" 
+         data-category="{{ p.category }}" 
+         data-plant="{{ p.plant }}" 
+         data-name="{{ p.name }}" 
+         data-disease="{{ p.disease }}">
+      <div class="product-card">
+        <div class="product-image-container">
+          <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" onerror="this.src='https://cdn-icons-png.flaticon.com/512/628/628324.png'">
+        </div>
+        <div class="product-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-light text-dark">{{ p.plant }}</span>
+            {% if p.is_healthy %}
+            <span class="badge bg-success-subtle text-success border border-success-subtle">Plant Booster</span>
+            {% else %}
+            <span class="badge bg-danger-subtle text-danger border border-danger-subtle">Fungicide/Cure</span>
+            {% endif %}
+          </div>
+
+          <h6 class="font-weight-bold text-dark mb-1" style="font-size: 0.95rem; line-height: 1.35; min-height: 2.6rem;">
+            {{ p.name }}
+          </h6>
+          
+          <p class="small text-muted mb-3 text-truncate" title="Target: {{ p.disease }}">
+            Target: <strong>{{ p.disease }}</strong>
+          </p>
+
+          <div class="mt-auto">
+            {% if p.buy_link != '#' %}
+            <a href="{{ p.buy_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-success w-100 rounded-pill font-weight-bold">
+              Buy Product &rarr;
+            </a>
+            {% else %}
+            <button class="btn btn-sm btn-light w-100 rounded-pill text-muted disabled">
+              Locally Sourced
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Empty State -->
+  <div id="market-empty-state" class="text-center py-5" style="display: none;">
+    <div class="dropzone-icon mb-3" style="background: #f1f5f9; color: #94a3b8;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <h5 class="text-dark">No matching agricultural products found</h5>
+    <p class="text-muted small">Try adjusting your search terms or filter selection.</p>
+  </div>
+</div>
+{% endblock body %}

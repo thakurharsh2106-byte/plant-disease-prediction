@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% block pagetitle %}AI Diagnosis Studio - PlantGuard AI{% endblock pagetitle %}
+
+{% block body %}
+<div class="container py-5">
+  <!-- Studio Header -->
+  <div class="text-center mb-5">
+    <span class="badge mb-2" style="background: var(--primary-100); color: var(--primary-800); font-weight: 600; padding: 0.45rem 1rem;">
+      ⚡ Deep Learning Inference
+    </span>
+    <h1 class="display-5 font-weight-bold" style="color: #064e3b;">Plant Disease AI Studio</h1>
+    <p class="text-muted" style="max-width: 600px; margin: 0 auto;">
+      Upload a clear photo of a plant leaf or capture one live using your camera. Our neural network will classify the disease and provide tailored treatment advice.
+    </p>
+  </div>
+
+  <div class="row g-4 justify-content-center">
+    <!-- Left Column: Upload & Live Studio -->
+    <div class="col-lg-7">
+      <div class="studio-card">
+        <h4 class="mb-3 d-flex align-items-center justify-content-between">
+          <span>Leaf Image Analysis</span>
+          <span class="badge bg-light text-dark font-weight-normal small">JPG, PNG, WebP</span>
+        </h4>
+
+        <!-- Main Diagnosis Form -->
+        <form id="diagnosis-form" action="/submit" method="POST" enctype="multipart/form-data">
+          <!-- Hidden File Input -->
+          <input type="file" id="file-input" name="image" accept="image/*" class="d-none">
+
+          <!-- Dropzone Container -->
+          <div id="dropzone" class="dropzone-container mb-4">
+            <!-- Initial Upload Prompt -->
+            <div id="upload-prompt">
+              <div class="dropzone-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <h5 class="mb-1">Drag and drop leaf image here</h5>
+              <p class="text-muted small mb-3">or browse from your device storage</p>
+
+              <div class="d-flex align-items-center justify-content-center gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-outline-success px-3 py-2 rounded-pill font-weight-bold" onclick="document.getElementById('file-input').click();">
+                  Browse Files
+                </button>
+                <button type="button" id="open-camera-btn" class="btn btn-sm btn-success px-3 py-2 rounded-pill font-weight-bold">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                  </svg>
+                  Use Live Camera
+                </button>
+              </div>
+            </div>
+
+            <!-- Preview Area (Shown after selection) -->
+            <div id="preview-area" class="upload-preview-area">
+              <div class="preview-image-box">
+                <img id="preview-img" src="" alt="Selected leaf preview">
+                <button type="button" id="remove-file-btn" class="remove-btn" title="Remove image">
+                  &times;
+                </button>
+              </div>
+              <div id="file-info" class="text-muted small mt-2 font-weight-medium"></div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center">
+            <button type="submit" id="diagnose-submit-btn" class="btn-primary-custom w-100 justify-content-center py-3" disabled>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              Run Deep Learning Diagnosis
+            </button>
+          </div>
+        </form>
+
+        <hr class="my-4">
+
+        <!-- 1-Click Interactive Test Samples -->
+        <div>
+          <div class="sample-gallery-title">
+            <h6 class="mb-0 font-weight-bold text-dark">
+              💡 Don't have a leaf image? Try these instant samples:
+            </h6>
+            <span class="small text-muted">Click to test</span>
+          </div>
+
+          <div class="d-flex flex-wrap gap-1 mt-2">
+            {% for s in samples %}
+            <div class="sample-leaf-chip" 
+                 data-img-src="{{ s.url }}" 
+                 data-filename="{{ s.filename }}" 
+                 data-label="{{ s.label }}">
+              <img src="{{ s.url }}" alt="{{ s.label }}" loading="lazy">
+              <span>{{ s.label }}</span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Photography Tips & Diagnostic Engine Specs -->
+    <div class="col-lg-5">
+      <!-- Best Practices Card -->
+      <div class="studio-card mb-4">
+        <h5 class="mb-3 text-dark font-weight-bold">
+          <span class="me-1">📸</span> Tips for Accurate Diagnosis
+        </h5>
+        
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div>
+            <strong>Focus on the symptoms:</strong> Ensure the discolored, spotted, or infected portion of the leaf is clearly visible in the center.
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div>
+            <strong>Natural lighting:</strong> Avoid harsh flash glare or dark shadows. Diffused natural daylight works best.
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div>
+            <strong>Clean background:</strong> A plain background (like your hand or tabletop) helps the neural network focus on the leaf margins.
+          </div>
+        </div>
+      </div>
+
+      <!-- Neural Network Architecture Specs -->
+      <div class="studio-card" style="background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);">
+        <h5 class="mb-3 text-dark font-weight-bold">
+          <span class="me-1">🧠</span> PyTorch CNN Specifications
+        </h5>
+
+        <ul class="list-unstyled small mb-0">
+          <li class="d-flex justify-content-between py-2 border-bottom">
+            <span class="text-muted">Architecture</span>
+            <span class="font-weight-bold">8-Layer ConvNet + BatchNorm</span>
+          </li>
+          <li class="d-flex justify-content-between py-2 border-bottom">
+            <span class="text-muted">Input Dimension</span>
+            <span class="font-weight-bold">224 x 224 x 3 RGB</span>
+          </li>
+          <li class="d-flex justify-content-between py-2 border-bottom">
+            <span class="text-muted">Dense Layer</span>
+            <span class="font-weight-bold">1024 units + Dropout (0.4)</span>
+          </li>
+          <li class="d-flex justify-content-between py-2 border-bottom">
+            <span class="text-muted">Output Classes</span>
+            <span class="font-weight-bold">39 Categories (Softmax)</span>
+          </li>
+          <li class="d-flex justify-content-between py-2">
+            <span class="text-muted">Classification</span>
+            <span class="badge bg-success">Trained on PlantVillage</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Working Live Camera Modal -->
+<div id="camera-modal" class="modal-backdrop-custom">
+  <div class="camera-modal-box">
+    <div class="camera-header">
+      <h5 class="mb-0 font-weight-bold text-dark">Live Leaf Capture</h5>
+      <button type="button" id="close-camera-btn" class="btn-close" aria-label="Close"></button>
+    </div>
+
+    <div class="camera-video-wrapper">
+      <video id="camera-video-feed" playsinline autoplay muted></video>
+    </div>
+
+    <div class="camera-controls">
+      <button type="button" id="shutter-btn" class="shutter-btn" title="Take Snapshot">
+        <div class="shutter-inner"></div>
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock body %}
